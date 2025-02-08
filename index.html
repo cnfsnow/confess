@@ -12,16 +12,13 @@
             color: white;
             overflow: hidden;
         }
-        .intro, .confession, .popup {
+        .confession {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
             animation: fadeIn 2s ease-in-out;
-            display: none;
-        }
-        .confession {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -33,7 +30,16 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .heart-btn, .submit-btn {
+        textarea {
+            width: 80%;
+            height: 200px;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: none;
+            box-shadow: 0 4px 10px rgba(255, 77, 109, 0.5);
+        }
+        .submit-btn {
             background: #ff4d6d;
             color: white;
             border: none;
@@ -42,8 +48,9 @@
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(255, 77, 109, 0.5);
+            margin-top: 20px;
         }
-        .heart-btn:hover, .submit-btn:hover {
+        .submit-btn:hover {
             background: #ff1e4d;
         }
         @keyframes fadeIn {
@@ -51,39 +58,38 @@
             to { opacity: 1; }
         }
         .popup {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.8);
             color: #fff;
             padding: 20px;
             border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 2s ease-in-out;
         }
     </style>
 </head>
 <body>
-    <div class="intro">
-        <h1>Are you ready to bare your soul and let your heart speak its truth? 💖✨</h1>
-        <button class="heart-btn" onclick="startConfession()">Confess Now</button>
-    </div>
     <div class="confession">
         <h1>Write your confession below</h1>
-        <textarea id="confessionBox" rows="10" cols="30" placeholder="Your confession..."></textarea>
+        <textarea id="confessionBox" placeholder="Your confession..."></textarea>
         <button class="submit-btn" onclick="submitConfession()">Submit</button>
     </div>
-    <div class="popup">
+    <div class="popup" id="popup">
         <h1>Thank you for your sincerest truth.</h1>
         <p>Your heart's desire is now recorded.</p>
     </div>
 
     <script>
-        function startConfession() {
-            document.querySelector('.intro').style.display = 'none';
-            document.querySelector('.confession').style.display = 'flex';
-        }
-
         function submitConfession() {
             const confession = document.getElementById('confessionBox').value;
             if (confession) {
                 document.querySelector('.confession').style.display = 'none';
-                document.querySelector('.popup').style.display = 'block';
+                const popup = document.getElementById('popup');
+                popup.style.display = 'block';
                 setTimeout(() => {
                     location.href = 'https://cnfsnow.github.io/lovestorage/';
                 }, 3000); // Redirect after 3 seconds
