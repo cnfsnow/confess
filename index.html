@@ -1,100 +1,76 @@
+<!-- Confess Website (cnfsnow.github.io/confess/) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confess Your Heart</title>
-    <style>
-        body {
-            background: linear-gradient(to right, #ff758c, #ff7eb3);
-            font-family: 'Times New Roman', serif;
-            text-align: center;
-            color: white;
-            overflow: hidden;
-        }
-        .confession {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            animation: fadeIn 2s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 {
-            font-size: 2.5rem;
-            font-style: italic;
-            background: -webkit-linear-gradient(#fff, #ffccd5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        textarea {
-            width: 80%;
-            height: 200px;
-            border-radius: 10px;
-            padding: 15px;
-            font-size: 1.2rem;
-            border: none;
-            box-shadow: 0 4px 10px rgba(255, 77, 109, 0.5);
-        }
-        .submit-btn {
-            background: #ff4d6d;
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(255, 77, 109, 0.5);
-            margin-top: 20px;
-        }
-        .submit-btn:hover {
-            background: #ff1e4d;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .popup {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            animation: fadeIn 2s ease-in-out;
-        }
-    </style>
+    <title>Confess</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="confession">
-        <h1>Write your confession below</h1>
-        <textarea id="confessionBox" placeholder="Your confession..."></textarea>
-        <button class="submit-btn" onclick="submitConfession()">Submit</button>
+    <div class="intro">
+        <div class="heart-animation"></div>
+        <h1>Are you ready to bare your soul and let your heart speak its truth?</h1>
+        <button onclick="openConfession()">Confess Now</button>
     </div>
-    <div class="popup" id="popup">
-        <h1>Thank you for your sincerest truth.</h1>
-        <p>Your heart's desire is now recorded.</p>
+    
+    <div id="confession-form" class="hidden">
+        <textarea id="confession-text" placeholder="Write your confession..."></textarea>
+        <button onclick="submitConfession()">Submit</button>
     </div>
-
+    
     <script>
+        function openConfession() {
+            document.querySelector('.intro').style.display = 'none';
+            document.getElementById('confession-form').classList.remove('hidden');
+        }
+
         function submitConfession() {
-            const confession = document.getElementById('confessionBox').value;
-            if (confession) {
-                document.querySelector('.confession').style.display = 'none';
-                const popup = document.getElementById('popup');
-                popup.style.display = 'block';
-                setTimeout(() => {
-                    location.href = 'https://cnfsnow.github.io/lovestorage/';
-                }, 3000); // Redirect after 3 seconds
+            let text = document.getElementById("confession-text").value.trim();
+            if (text) {
+                localStorage.setItem(`confession_${Date.now()}`, text);
+                window.location.href = "https://cnfsnow.github.io/lovestorage/";
+            } else {
+                alert("Please write something before submitting.");
             }
         }
+    </script>
+</body>
+</html>
+
+<!-- LoveStorage Website (cnfsnow.github.io/lovestorage/) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoveStorage</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Stored Confessions</h1>
+    <div id="confessions-grid"></div>
+    
+    <script>
+        function loadConfessions() {
+            let grid = document.getElementById("confessions-grid");
+            for (let key in localStorage) {
+                if (key.startsWith("confession_")) {
+                    let div = document.createElement("div");
+                    div.className = "confession-bubble";
+                    div.innerHTML = `<p>${localStorage[key]}</p>
+                                     <button onclick="deleteConfession('${key}')">Delete</button>`;
+                    grid.appendChild(div);
+                }
+            }
+        }
+        
+        function deleteConfession(key) {
+            localStorage.removeItem(key);
+            location.reload();
+        }
+        
+        loadConfessions();
     </script>
 </body>
 </html>
